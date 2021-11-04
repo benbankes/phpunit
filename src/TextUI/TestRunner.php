@@ -23,6 +23,7 @@ use function range;
 use function sprintf;
 use PHPUnit\Event;
 use PHPUnit\Framework\Exception;
+use PHPUnit\Framework\TestListener;
 use PHPUnit\Framework\TestResult;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Logging\JUnit\JunitXmlLogger;
@@ -200,7 +201,9 @@ final class TestRunner
             Version::getVersionString() . "\n"
         );
 
-        $result->addListener($this->printer);
+        if ($this->printer instanceof TestListener) {
+            $result->addListener($this->printer);
+        }
 
         if ($this->configuration->hasLogfileText()) {
             $result->addListener(
