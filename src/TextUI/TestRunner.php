@@ -44,7 +44,6 @@ use PHPUnit\Runner\Version;
 use PHPUnit\TextUI\Configuration\CodeCoverageFilterRegistry;
 use PHPUnit\TextUI\Configuration\Configuration;
 use PHPUnit\TextUI\Configuration\Registry;
-use PHPUnit\TextUI\ResultPrinter\OldResultPrinter;
 use PHPUnit\TextUI\ResultPrinter\ResultPrinter;
 use PHPUnit\TextUI\ResultPrinter\Standard\ResultPrinter as StandardResultPrinter;
 use PHPUnit\TextUI\ResultPrinter\VoidPrinter;
@@ -209,11 +208,12 @@ final class TestRunner
         }
 
         if ($this->configuration->hasLogfileText()) {
-            $result->addListener(
-                new OldResultPrinter(
-                    $this->configuration->logfileText(),
-                    true
-                )
+            $textLogger = new StandardResultPrinter(
+                $this->configuration->logfileText(),
+                true,
+                false,
+                80,
+                false
             );
         }
 
@@ -404,6 +404,10 @@ final class TestRunner
 
         if (isset($teamCityOutput)) {
             $teamCityOutput->flush();
+        }
+
+        if (isset($textLogger)) {
+            $textLogger->flush();
         }
 
         if (CodeCoverage::isActive()) {
