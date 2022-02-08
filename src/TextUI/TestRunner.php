@@ -189,9 +189,7 @@ final class TestRunner
 
         Event\Facade::seal();
 
-        $this->printer->print(
-            Version::getVersionString() . "\n"
-        );
+        $this->write(Version::getVersionString() . "\n");
 
         if ($this->configuration->hasLogfileText()) {
             $textLogger = new StandardResultPrinter(
@@ -336,7 +334,7 @@ final class TestRunner
             }
         }
 
-        $this->printer->print("\n");
+        $this->write("\n");
 
         if ($this->configuration->enforceTimeLimit() && !(new Invoker)->canInvokeWithTimeout()) {
             $this->writeMessage('Error', 'PHP extension pcntl is required for enforcing time limits');
@@ -620,7 +618,7 @@ final class TestRunner
 
     private function codeCoverageGenerationStart(string $format): void
     {
-        $this->printer->print(
+        $this->write(
             sprintf(
                 "\nGenerating code coverage report in %s format ... ",
                 $format
@@ -632,7 +630,7 @@ final class TestRunner
 
     private function codeCoverageGenerationSucceeded(): void
     {
-        $this->printer->print(
+        $this->write(
             sprintf(
                 "done [%s]\n",
                 $this->timer()->stop()->asString()
@@ -642,7 +640,7 @@ final class TestRunner
 
     private function codeCoverageGenerationFailed(\Exception $e): void
     {
-        $this->printer->print(
+        $this->write(
             sprintf(
                 "failed [%s]\n%s\n",
                 $this->timer()->stop()->asString(),
